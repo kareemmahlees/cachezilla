@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "cachezilla"
+version = "0.1.0"
+description = ""
+authors = ["Kareem Mahlees <kareemmahlees@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pre-commit = "^3.3.1"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pyright]
+reportOptionalSubscript = false
+reportOptionalMemberAccess = false
+
+[tool.pylint]
+disable = "missing-module-docstring"
+
+[tool.mypy]
+disable_error_code = ["union-attr"]
+
+[tool.pydocstyle]
+ignore = ["D100","D104"]
