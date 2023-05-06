@@ -28,40 +28,16 @@ class CacheZilla:
             int: number of items inserted
 
         """
-        queue_item = CacheItem(key, value, ttl)
+        item = CacheItem(key, value, ttl)
 
         if self.max_size and self.size == self.max_size:
-            current_highest = self.head
-            current = self.head
-            # get the most recent cache item
-            while current is not None:
-                if (
-                    current.last_used is not None
-                    and current_highest.last_used is not None
-                    and current.last_used
-                    > current_highest.last_used  # type:ignore # noqa
-                ):
-                    current_highest = current
-                current = current.next
+            self.__evict()
 
-            # true if all the items have not been used
-            if current_highest.last_used is None:
-                prev_node = self.tail.prev
-                self.tail.prev = None
-                self.tail = prev_node
-                return 1
-
-            # remove the most recently used item
-            self.__remove_item(current_highest)  # type:ignore
-            self.size -= 1
-
+        # the first insertion
         if self.head is None or self.tail is None:
-            self.head = self.tail = queue_item
+            self.head = self.tail = item
         else:
-            next_node = self.head
-            queue_item.next = next_node
-            next_node.prev = queue_item
-            self.head = queue_item
+            self.__insert_item(item)
         self.size += 1
         return 1
 
@@ -75,14 +51,57 @@ class CacheZilla:
             Any: the item value
         """
         current = self.head
-        while current.next is not None:
+        while current is not None:
             if current.key == key:
                 break
             current = current.next
+        else:
+            return None
         current.last_used = datetime.now()
         return current.value
 
     def __remove_item(self, item: CacheItem) -> None:
+        # guard clause for the tail
+        if item.next is None:
+            item.prev.next = None
+            self.tail = item.prev
+            item.prev = None
+            return
+        # guard clause for the head
+        if item.prev is None:
+            item.next.prev = None
+            self.head = item.next
+            item.next = None
+            return
         item.prev.next = item.next
         item.next.prev = item.prev
         item.next = item.prev = None
+
+    def __evict(self) -> None:
+        least_recently_used: CacheItem | None = self.head
+        current = self.head
+
+        # get the lru item
+        while current is not None:
+            if current.last_used is None:
+                least_recently_used = current
+                current = current.next
+                continue
+            if (
+                least_recently_used.last_used is not None
+                and current.last_used < least_recently_used.last_used
+            ):  # type: ignore
+                least_recently_used = current
+                current = current.next
+                continue
+            current = current.next
+
+        # remove the lru item
+        self.__remove_item(least_recently_used)  # type:ignore
+        self.size -= 1
+
+    def __insert_item(self, item: CacheItem) -> None:
+        next_node = self.head
+        item.next = next_node
+        next_node.prev = item
+        self.head = item
