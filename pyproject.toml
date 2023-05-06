@@ -13,6 +13,10 @@ pre-commit = "^3.3.1"
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
 
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.3.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
@@ -22,7 +26,7 @@ reportOptionalSubscript = false
 reportOptionalMemberAccess = false
 
 [tool.pylint]
-disable = "missing-module-docstring"
+disable = ["missing-module-docstring","missing-function-docstring"]
 
 [tool.mypy]
 disable_error_code = ["union-attr"]
