@@ -6,11 +6,11 @@ from typing import Any, Optional
 @dataclass
 class CacheItem:
 
-    """The DataStructure responsible for storing the itme info."""
+    """The DataStructure responsible for storing the item info."""
 
     key: Any
     value: Any
-    ttl: int | None
+    ttl: datetime | None
     last_used: Optional[datetime] = None
     next: Optional["CacheItem"] = None
     prev: Optional["CacheItem"] = None

@@ -92,3 +92,16 @@ def test_tail_head_are_set_right(cachezilla_object: CacheZilla):
 
     assert cachezilla_object.tail.value == "first"
     assert cachezilla_object.head.value == "third"
+
+
+def test_ttl_works():
+    cachezilla_object = CacheZilla(max_size=3)
+    cachezilla_object.set("first", "first")
+    cachezilla_object.set("second", "second", ttl=1)
+    cachezilla_object.set("third", "third")
+    time.sleep(1)
+
+    cachezilla_object.set("fourth", "fourth")
+
+    assert cachezilla_object.get("second") is None
+    assert cachezilla_object.get("fourth") == "fourth"
