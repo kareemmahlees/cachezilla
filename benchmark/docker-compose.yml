@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  benchmark_db:
+    container_name: cachezilla_benchmark_db
+    restart: always
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=cachezilla
+      - POSTGRES_USER=cachezilla
+    ports:
+      - 54321:5432

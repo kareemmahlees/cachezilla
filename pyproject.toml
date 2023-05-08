@@ -1,7 +1,8 @@
 [tool.poetry]
 name = "cachezilla"
 version = "0.1.0"
-description = ""
+description = "A lightweight caching system to boost your next app"
+repository = "https://github.com/kareemmahlees/cachezilla"
 authors = ["Kareem Mahlees <kareemmahlees@gmail.com>"]
 readme = "README.md"
 
@@ -16,6 +17,13 @@ black = "^23.3.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.3.1"
+
+
+[tool.poetry.group.benchmark.dependencies]
+fastapi = "^0.95.1"
+sqlmodel = "^0.0.8"
+psycopg2 = "^2.9.6"
+uvicorn = "^0.22.0"
 
 [build-system]
 requires = ["poetry-core"]
