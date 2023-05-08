@@ -25,7 +25,7 @@ class CacheZilla:
 
             value (Any): item value
 
-            ttl (int | None, optional):
+            ttl (float | None, optional):
             time after which the item will expire ( in seconds )
             . Defaults to None.
 
@@ -90,6 +90,10 @@ class CacheZilla:
         self.size -= 1
 
     def __evict(self) -> None:
+        """Execute cache eviction algorithm with removal of expired ttls
+
+        implements the LRU ( Least Recently Used ) cache eviction algorithm
+        """
         least_recently_used: CacheItem | None = self.head
         current = self.head
 
